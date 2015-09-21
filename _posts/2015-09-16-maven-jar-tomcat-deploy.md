@@ -20,7 +20,7 @@ excerpt: 公司只有内网
 ## 管理未代理第三方库(3rd Repository）)
 
 ![](/images/maven/21.png)
-![](/images/maven/22.png)
+![](/images/maven/22.png)  
 ![](/images/maven/23.png)
 
 ---
