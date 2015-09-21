@@ -2,7 +2,7 @@
 layout: post
 title:  "maven管理项目构件"
 date:   2015-09-16 30:06:06
-categories: 架构
+categories: test
 excerpt: 公司只有内网
 ---
 
