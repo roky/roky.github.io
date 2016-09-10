@@ -13,8 +13,11 @@ excerpt:
 最近公司要做一个产品，短信报警。公司的报警系统基于C#开发的，java在公司产品中通讯功能相对来说，用的比较少。所以当决策在web开发这套产品的时候，也面临的技术选型问题。主要从几个方面来考虑：
 
 1、由于需要考虑web通讯，（看了web通讯这块，选择了pushlet技术）
+
 2、后端通讯采用mina后服务器通讯，并将信息推送给web。
+
 3、并发量，短信报警应用不是太广，报警量不是太多，但是考虑到web通讯主要基于轮训技术，还是考虑了集群。
+
 由于集群，之前公司的框架主要基于ecached缓存的，基于单机版本的。引入了memcached分布式缓存技术。
 
 ---
@@ -32,7 +35,9 @@ excerpt:
 ![](/images/memcached/m2.png)
 
 2、基于libevent的事件处理：libevent是个程序库，他将Linux的epoll、BSD类操作系统的kqueue等时间处理功能封装成统一的接口。memcached使用这个libevent库，因此能在Linux、BSD、Solaris等操作系统上发挥其高性能。
+
 3、内置内存存储方式：为了提高性能，memcached中保存的数据都存储在memcached内置的内存存储空间中。由于数据仅存在于内存中，因此重启memcached，重启操作系统会导致全部数据消失。另外，内容容量达到指定的值之后memcached回自动删除不适用的缓存。
+
 4、Memcached不互通信的分布式：memcached尽管是“分布式”缓存服务器，但服务器端并没有分布式功能。各个memcached不会互相通信以共享信息。他的分布式主要是通过客户端实现的。
 
 客户端key的服务器分配和获取
@@ -50,7 +55,7 @@ if ( bucket < 0 ) bucket *= -1;
 获取服务器字符：
 String server= buckets.get( (int)bucket；
 
-###一致性hashcode分布
+### 一致性hashcode分布
 
 一致性hashcode分布，只是根据权重将服务器地址放入TreeMap<Long,String> consistentBuckets这个TreeMap里。<br>
 获取keyHashCode：<br>
@@ -72,12 +77,12 @@ memcached会针对客户端发送的数据选择slab并缓存到chunk中，这�
 
 
 
-###Slab Allocation 的主要术语
+### Slab Allocation 的主要术语
 •	Page :分配给Slab 的内存空间，默认是1MB。分配给Slab 之后根据slab 的大小切分成chunk.
 •	Chunk : 用于缓存记录的内存空间。
 •	Slab Class:特定大小的chunk 的组。
 
-###在Slab 中缓存记录的原理
+### 在Slab 中缓存记录的原理
 
 Memcached根据收到的数据的大小，选择最合适数据大小的Slab 。
 memcached中保存着slab内空闲chunk的列表，根据该列表选择chunk,然后将数据缓存于其中。
@@ -93,12 +98,13 @@ Lazy Expriationmemcached内部不会监视记录是否过期，而是在get时�
 对于缓存存储容量满的情况下的删除需要考虑多种机制，一方面是按队列机制，一方面应该对应缓存对象本身的优先级，根据缓存对象的优先级进行对象的删除。
 
 ### LRU:从缓存中有效删除数据的原理
+
 memcached内部也维护着一套LRU（Least Recently Used）置换算法，当设定的内存满的时候，会进行最近很少使用的数据置换出去从而分配空间，所以对于提升 memcached命中率的问题主要还是一是根据业务存放的value值来调整好chunk的大小以达到最大效率的利用内存；二是扩大内存保证所有缓存的 数据不被置换出去。
 
 ##客户端实现原理
 
-![](/images/memcached/m6.jpg)
-![](/images/memcached/m7.jpg)
+![](/images/memcached/m6.png)
+![](/images/memcached/m7.png)
 
 ## 大数据传输处理
 
